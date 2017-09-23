@@ -46,7 +46,7 @@ import org.codehaus.plexus.util.FileUtils
  */
 
 @Mojo( name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST, requiresProject = true, threadSafe = true )
-@Execute( goal = "findbugs")
+@Execute( goal = "spotbugs")
 class FindbugsViolationCheckMojo extends AbstractMojo {
 
     /**
@@ -61,7 +61,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0.0
      */
-    @Parameter( defaultValue = "false", property="findbugs.xmlOutput", required = true )
+    @Parameter( defaultValue = "false", property="spotbugs.xmlOutput", required = true )
     boolean xmlOutput
 
     /**
@@ -148,7 +148,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.0
      */
-    @Parameter( defaultValue = "false", property="findbugs.includeTests" )
+    @Parameter( defaultValue = "false", property="spotbugs.includeTests" )
     boolean includeTests
 
     /**
@@ -208,7 +208,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      * Threshold of minimum bug severity to report. Valid values are High, Default, Low, Ignore, and Exp (for experimental).
      *
      */
-    @Parameter( defaultValue = "Default", property="findbugs.threshold" )
+    @Parameter( defaultValue = "Default", property="spotbugs.threshold" )
     String threshold
 
     /**
@@ -235,7 +235,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( property="findbugs.includeFilterFile" )
+    @Parameter( property="spotbugs.includeFilterFile" )
     String includeFilterFile
 
     /**
@@ -256,7 +256,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( property="findbugs.excludeFilterFile" )
+    @Parameter( property="spotbugs.excludeFilterFile" )
     String excludeFilterFile
 
     /**
@@ -279,7 +279,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.4.1
      */
-    @Parameter( property="findbugs.excludeBugsFile" )
+    @Parameter( property="spotbugs.excludeBugsFile" )
     String excludeBugsFile
 
     /**
@@ -287,14 +287,14 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( defaultValue = "Default", property="findbugs.effort" )
+    @Parameter( defaultValue = "Default", property="spotbugs.effort" )
     String effort
 
     /**
      * turn on Findbugs debugging
      *
      */
-    @Parameter( defaultValue = "false", property="findbugs.debug" )
+    @Parameter( defaultValue = "false", property="spotbugs.debug" )
     Boolean debug
 
     /**
@@ -303,7 +303,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.1
      */
-    @Parameter( defaultValue = "false", property="findbugs.relaxed" )
+    @Parameter( defaultValue = "false", property="spotbugs.relaxed" )
     Boolean relaxed
 
     /**
@@ -311,7 +311,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( property="findbugs.visitors" )
+    @Parameter( property="spotbugs.visitors" )
     String visitors
 
     /**
@@ -319,7 +319,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( property="findbugs.omitVisitors" )
+    @Parameter( property="spotbugs.omitVisitors" )
     String omitVisitors
 
     /**
@@ -340,7 +340,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.0-beta-1
      */
-    @Parameter( property="findbugs.pluginList" )
+    @Parameter( property="spotbugs.pluginList" )
     String pluginList
 
     /**
@@ -348,7 +348,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.1
      */
-    @Parameter( property="findbugs.onlyAnalyze" )
+    @Parameter( property="spotbugs.onlyAnalyze" )
     String onlyAnalyze
 
     /**
@@ -357,7 +357,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.3.2
      */
-    @Parameter( property="findbugs.nested", defaultValue = "false" )
+    @Parameter( property="spotbugs.nested", defaultValue = "false" )
     Boolean nested
 
     /**
@@ -366,7 +366,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.3.2
      */
-    @Parameter( property="findbugs.trace", defaultValue = "false" )
+    @Parameter( property="spotbugs.trace", defaultValue = "false" )
     Boolean trace
 
     /**
@@ -374,7 +374,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.4.1
      */
-    @Parameter( property="findbugs.maxRank" )
+    @Parameter( property="spotbugs.maxRank" )
     int maxRank
 
     /**
@@ -382,7 +382,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 1.1
      */
-    @Parameter( property="findbugs.skip", defaultValue = "false" )
+    @Parameter( property="spotbugs.skip", defaultValue = "false" )
     boolean skip
 
     /**
@@ -404,7 +404,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.0
      */
-    @Parameter( property="findbugs.failOnError", defaultValue = "true" )
+    @Parameter( property="spotbugs.failOnError", defaultValue = "true" )
     boolean failOnError
 
     /**
@@ -412,7 +412,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.3.2
      */
-    @Parameter( property="findbugs.fork", defaultValue = "true" )
+    @Parameter( property="spotbugs.fork", defaultValue = "true" )
     boolean fork
 
     /**
@@ -421,7 +421,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.2
      */
-    @Parameter( property="findbugs.maxHeap", defaultValue = "512" )
+    @Parameter( property="spotbugs.maxHeap", defaultValue = "512" )
     int maxHeap
 
     /**
@@ -432,7 +432,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.2
      */
-    @Parameter( property="findbugs.timeout", defaultValue = "600000" )
+    @Parameter( property="spotbugs.timeout", defaultValue = "600000" )
     int timeout
 
     /**
@@ -442,7 +442,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
      *
      * @since 2.4.1
      */
-    @Parameter( property="findbugs.jvmArgs" )
+    @Parameter( property="spotbugs.jvmArgs" )
     String jvmArgs
 
 	int bugCount
@@ -453,7 +453,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
 		Locale locale = Locale.getDefault()
 		List sourceFiles
 
-		log.debug("Executing findbugs:check")
+		log.debug("Executing spotbugs:check")
 
 		if ( this.classFilesDirectory.exists() && this.classFilesDirectory.isDirectory() ) {
 			sourceFiles = FileUtils.getFiles(classFilesDirectory, FindBugsInfo.JAVA_REGEX_PATTERN, null)
@@ -463,7 +463,7 @@ class FindbugsViolationCheckMojo extends AbstractMojo {
 
 			// this goes
 
-			log.debug("Here goes...............Executing findbugs:check")
+			log.debug("Here goes...............Executing spotbugs:check")
 
 			if (!findbugsXmlOutputDirectory.exists()) {
 				if ( !findbugsXmlOutputDirectory.mkdirs() ) {
