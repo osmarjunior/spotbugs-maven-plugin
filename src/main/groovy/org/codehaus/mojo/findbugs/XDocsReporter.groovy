@@ -25,7 +25,7 @@ import groovy.xml.StreamingMarkupBuilder
 
 
 /**
- * The reporter controls the generation of the FindBugs report.
+ * The reporter controls the generation of the Spotbugs report.
  *
  * @author <a href="mailto:gleclaire@codehaus.org">Garvin LeClaire</a>
  */
@@ -36,7 +36,7 @@ class XDocsReporter {
 	 * The key to get the value if the line number is not available.
 	 *
 	 */
-	static final String NOLINE_KEY = "report.findbugs.noline"
+	static final String NOLINE_KEY = "report.spotbugs.noline"
 
 	/**
 	 * The bundle to get the messages from.

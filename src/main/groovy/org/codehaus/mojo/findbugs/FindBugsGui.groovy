@@ -27,12 +27,12 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.plugins.annotations.ResolutionScope
 
 /**
- * Launch the Findbugs GUI.
+ * Launch the Spotbugs GUI.
  * It will use all the parameters in the POM fle.
  *
  * @since 2.0
  *
- * @description Launch the Findbugs GUI using the parameters in the POM fle.
+ * @description Launch the Spotbugs GUI using the parameters in the POM fle.
  *
  * @author <a href="mailto:gleclaire@codehaus.org">Garvin LeClaire</a>
  */
@@ -46,20 +46,20 @@ class FindBugsGui extends AbstractMojo {
     static Locale locale = Locale.ENGLISH
 
     /**
-     * Directory containing the class files for FindBugs to analyze.
+     * Directory containing the class files for Spotbugs to analyze.
      */
     @Parameter( defaultValue = '${project.build.outputDirectory}', required = true )
     File classFilesDirectory
 
     /**
-     * turn on Findbugs debugging
+     * turn on Spotbugs debugging
      *
      */
     @Parameter( defaultValue = "false", property="spotbugs.debug" )
     Boolean debug
 
     /**
-     * List of artifacts this plugin depends on. Used for resolving the Findbugs coreplugin.
+     * List of artifacts this plugin depends on. Used for resolving the Spotbugs coreplugin.
      *
      */
     @Parameter( property="plugin.artifacts", required = true, readonly = true )
@@ -73,7 +73,7 @@ class FindBugsGui extends AbstractMojo {
     String effort
 
     /**
-     * The plugin list to include in the report. This is a FindBugsInfo.COMMA-delimited list.
+     * The plugin list to include in the report. This is a SpotbugsInfo.COMMA-delimited list.
      *
      */
     @Parameter( property="spotbugs.pluginList" )
@@ -94,11 +94,11 @@ class FindBugsGui extends AbstractMojo {
     ResourceBundle bundle
 
     /**
-     * Specifies the directory where the findbugs native xml output will be generated.
+     * Specifies the directory where the Spotbugs native xml output will be generated.
      *
      */
     @Parameter( defaultValue = '${project.build.directory}', required = true )
-    File findbugsXmlOutputDirectory
+    File spotbugsXmlOutputDirectory
 
     /**
      * The file encoding to use when reading the source files. If the property <code>project.build.sourceEncoding</code>
@@ -128,7 +128,7 @@ class FindBugsGui extends AbstractMojo {
             log.debug("  Plugin Artifacts to be added ->" + pluginArtifacts.toString())
         }
 
-        ant.project.setProperty('basedir', findbugsXmlOutputDirectory.getAbsolutePath())
+        ant.project.setProperty('basedir', spotbugsXmlOutputDirectory.getAbsolutePath())
         ant.project.setProperty('verbose', "true")
 
         ant.java(classname: "edu.umd.cs.findbugs.LaunchAppropriateUI", fork: "true", failonerror: "true", clonevm: "true", maxmemory: "${maxHeap}m")
