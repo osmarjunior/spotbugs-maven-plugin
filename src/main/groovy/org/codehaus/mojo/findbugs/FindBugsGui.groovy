@@ -141,12 +141,12 @@ class FindBugsGui extends AbstractMojo {
             log.info("File Encoding is " + effectiveEncoding)
 
             sysproperty(key: "file.encoding" , value: effectiveEncoding)
-            def findbugsXmlName = findbugsXmlOutputDirectory.toString() + "/findbugsXml.xml"
-            def findbugsXml = new File(findbugsXmlName)
+            def spotbugsXmlName = spotbugsXmlOutputDirectory.toString() + "/spotbugsXml.xml"
+            def spotbugsXml = new File(spotbugsXmlName)
 
-            if ( findbugsXml.exists() ) {
-                log.debug("  Found an FindBugs XML at ->" + findbugsXml.toString())
-                arg(value: findbugsXml)
+            if ( spotbugsXml.exists() ) {
+                log.debug("  Found an FindBugs XML at ->" + spotbugsXml.toString())
+                arg(value: spotbugsXml)
             }
 
             classpath()
