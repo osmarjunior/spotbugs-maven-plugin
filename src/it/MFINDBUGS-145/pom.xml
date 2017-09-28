@@ -27,7 +27,7 @@
   </parent>
   -->
 
-  <groupId>org.codehaus.mojo.findbugs-maven-plugin.it</groupId>
+  <groupId>com.github.spotbugs.spotbugs-maven-plugin.it</groupId>
   <artifactId>MFINDBUGS-145</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -54,8 +54,8 @@
               <version>@jxrPluginVersion@</version>
             </plugin>
             <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs-maven-plugin</artifactId>
             </plugin>
           </reportPlugins>
         </configuration>
