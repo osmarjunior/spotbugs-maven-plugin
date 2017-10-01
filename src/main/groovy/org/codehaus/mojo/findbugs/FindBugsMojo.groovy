@@ -675,7 +675,7 @@ class FindBugsMojo extends AbstractMavenReport {
     }
 
     public void execute() {
-        log.debug("****** FindBugsMojo execute *******")
+        log.debug("****** SpotBugsMojo execute *******")
 
         Locale locale = Locale.getDefault()
         if (!skip) {
@@ -687,7 +687,7 @@ class FindBugsMojo extends AbstractMavenReport {
     }
 
     private void executeCheck(Locale locale) {
-        log.debug("****** FindBugsMojo executeCheck *******")
+        log.debug("****** SpotBugsMojo executeCheck *******")
 
         log.debug("Generating Spotbugs XML")
 
@@ -699,7 +699,7 @@ class FindBugsMojo extends AbstractMavenReport {
     }
 
     private void generateXDoc(Locale locale) {
-        log.debug("****** FindBugsMojo generateXDoc *******")
+        log.debug("****** SpotBugsMojo generateXDoc *******")
 
         if (outputSpotbugsFile != null && outputSpotbugsFile.exists()) {
 
@@ -967,7 +967,7 @@ class FindBugsMojo extends AbstractMavenReport {
      */
     private void executeSpotbugs(File outputFile) {
 
-        log.debug("****** FindBugsMojo executeSpotbugs *******")
+        log.debug("****** SpotBugsMojo executeSpotbugs *******")
         long startTime, duration
 
         File tempFile = new File("${project.build.directory}/spotbugsTemp.xml")
@@ -981,7 +981,7 @@ class FindBugsMojo extends AbstractMavenReport {
 
         outputEncoding = outputEncoding ?: 'UTF-8'
 
-        log.debug("****** Executing FindBugsMojo *******")
+        log.debug("****** Executing SpotBugsMojo *******")
 
         resourceManager.addSearchPath(FileResourceLoader.ID, project.getFile().getParentFile().getAbsolutePath())
         resourceManager.addSearchPath(FindBugsInfo.URL, "")
@@ -1053,10 +1053,10 @@ class FindBugsMojo extends AbstractMavenReport {
 
         if (log.isDebugEnabled()) {
             duration = (System.nanoTime() - startTime) / 1000000000.00
-            log.debug("FindBugs duration is ${duration}")
+            log.debug("SpotBugs duration is ${duration}")
         }
 
-        log.info("Done FindBugs Analysis....")
+        log.info("Done SpotBugs Analysis....")
 
         if (tempFile.exists()) {
 
