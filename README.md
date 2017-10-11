@@ -20,7 +20,7 @@ Maven Mojo Plug-In to generate reports based on the SpotBugs Analyzer
 
 Run all tests
 ```
-mvn -DtestSrc=remote -Prun-its clean install
+mvn -DtestSrc=remote -Prun-its clean install -D"invoker.parallelThreads=4"
 ```
 Skip tests
 ```
@@ -28,12 +28,12 @@ mvn -DskipTests=true clean install
 ```
 Run tests on spotbugs test source code that is local instead of from SpotBugs github repository
 ```
-mvn -DtestSrc=local -DlocalTestSrc=/opt/spotBugs -Prun-its clean install
+mvn -DtestSrc=local -DlocalTestSrc=/opt/spotBugs -Prun-its clean install -D"invoker.parallelThreads=4"
 ```
 
 Run selected tests
 ```
-mvn -DtestSrc=remote -Prun-its -Dinvoker.test=build-*,basic-1,check-nofail clean install
+mvn -DtestSrc=remote -Prun-its -Dinvoker.test=build-*,basic-1,check-nofail clean install -D"invoker.parallelThreads=4"
 ```
 
 Run tests in debugger
