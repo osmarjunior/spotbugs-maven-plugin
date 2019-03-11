@@ -20,10 +20,11 @@ package org.codehaus.mojo.spotbugs
  */
 
 import org.apache.maven.artifact.repository.ArtifactRepository
-import org.apache.maven.artifact.resolver.ArtifactResolver
 
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.doxia.tools.SiteTool
+
+import org.apache.maven.execution.MavenSession
 
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoExecutionException
@@ -36,6 +37,8 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.plugins.annotations.ResolutionScope
 
 import org.apache.maven.project.MavenProject
+
+import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolver
 
 import org.codehaus.plexus.resource.ResourceManager
 import org.codehaus.plexus.util.FileUtils
@@ -50,7 +53,7 @@ import org.codehaus.plexus.util.FileUtils
  * @author <a href="mailto:gleclaire@codehaus.org">Garvin LeClaire</a>
  */
 
-@Mojo( name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST, requiresProject = true, threadSafe = true )
+@Mojo( name = "check", defaultPhase = LifecyclePhase.VERIFY, requiresDependencyResolution = ResolutionScope.TEST, requiresProject = true, threadSafe = true)
 @Execute( goal = "spotbugs")
 class SpotbugsViolationCheckMojo extends AbstractMojo {
 
@@ -78,11 +81,6 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     File xmlOutputDirectory
 
     /**
-     * Location where generated html will be created.
-     *
-     */
-
-    /**
      * This has been deprecated and is on by default.
      *
      * @since 1.2.0
@@ -93,7 +91,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     boolean spotbugsXmlOutput
 
     /**
-     * Specifies the directory where the spotbugs native xml output will be generated.
+     * Specifies the directory where the Spotbugs native xml output will be generated.
      *
      * @since 1.2.0
      */
@@ -107,13 +105,13 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     Renderer siteRenderer
 
     /**
-     * Directory containing the class files for SpotBugs to analyze.
+     * Directory containing the class files for Spotbugs to analyze.
      */
     @Parameter( defaultValue = '${project.build.outputDirectory}', required = true )
     File classFilesDirectory
 
     /**
-     * Directory containing the test class files for SpotBugs to analyze.
+     * Directory containing the test class files for Spotbugs to analyze.
      *
      */
     @Parameter( defaultValue = '${project.build.testOutputDirectory}', required = true )
@@ -157,7 +155,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     boolean includeTests
 
     /**
-     * List of artifacts this plugin depends on. Used for resolving the Spotbugs coreplugin.
+     * List of artifacts this plugin depends on. Used for resolving the Spotbugs core plugin.
      *
      */
     @Parameter( property="plugin.artifacts", required = true, readonly = true )
@@ -178,7 +176,13 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     List remoteArtifactRepositories
 
     /**
-     * Maven Project
+     * Maven Session.
+     */
+    @Parameter (defaultValue = '${session}', required = true, readonly = true)
+    MavenSession session;
+
+    /**
+     * Maven Project.
      *
      */
     @Parameter( property="project", required = true, readonly = true )
@@ -236,6 +240,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
      * resolved, the contents of the configuration is copied into the
      * <code>${project.build.directory}</code>
      * directory before being passed to Spotbugs as a filter file.
+     * It supports multiple files separated by a comma
      * </p>
      *
      * @since 1.0-beta-1
@@ -257,6 +262,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
      * resolved, the contents of the configuration is copied into the
      * <code>${project.build.directory}</code>
      * directory before being passed to Spotbugs as a filter file.
+     * It supports multiple files separated by a comma
      * </p>
      *
      * @since 1.0-beta-1
@@ -296,7 +302,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     String effort
 
     /**
-     * turn on Spotbugs debugging
+     * Turn on Spotbugs debugging.
      *
      */
     @Parameter( defaultValue = "false", property="spotbugs.debug" )
@@ -358,7 +364,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
 
     /**
      * This option enables or disables scanning of nested jar and zip files found
-     *  in the list of files and directories to be analyzed.
+     * in the list of files and directories to be analyzed.
      *
      * @since 2.3.2
      */
@@ -391,6 +397,8 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     boolean skip
 
     /**
+     * Resource Manager.
+     *
      * @since 2.0
      */
     @Component( role = ResourceManager.class)
@@ -413,7 +421,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     boolean failOnError
 
     /**
-     * Fork a VM for SpotBugs analysis.  This will allow you to set timeouts and heap size
+     * Fork a VM for Spotbugs analysis.  This will allow you to set timeouts and heap size.
      *
      * @since 2.3.2
      */
@@ -430,8 +438,8 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     int maxHeap
 
     /**
-     * Specifies the amount of time, in milliseconds, that SpotBugs may run before
-     *  it is assumed to be hung and is terminated.
+     * Specifies the amount of time, in milliseconds, that Spotbugs may run before
+     * it is assumed to be hung and is terminated.
      * The default is 600,000 milliseconds, which is ten minutes.
      * This only works if the <b>fork</b> parameter is set <b>true</b>.
      *
@@ -442,7 +450,7 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
 
     /**
      * <p>
-     * the arguments to pass to the forked VM (ignored if fork is disabled).
+     * The arguments to pass to the forked VM (ignored if fork is disabled).
      * </p>
      *
      * @since 2.4.1
@@ -450,45 +458,55 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
     @Parameter( property="spotbugs.jvmArgs" )
     String jvmArgs
 
-	int bugCount
+    int bugCount
 
-	int errorCount
+    int errorCount
 
-	void execute() {
-		Locale locale = Locale.getDefault()
-		List sourceFiles
+    /**
+     * <p>
+     * specified max number of violations which can be ignored by the spotbugs.
+     * </p>
+     *
+     * @since 2.4.1
+     */
+    @Parameter( property="spotbugs.maxAllowedViolations" , defaultValue = "0")
+    int maxAllowedViolations
 
-		log.debug("Executing spotbugs:check")
+    void execute() {
+        Locale locale = Locale.getDefault()
+        List sourceFiles
 
-		if ( this.classFilesDirectory.exists() && this.classFilesDirectory.isDirectory() ) {
-			sourceFiles = FileUtils.getFiles(classFilesDirectory, SpotBugsInfo.JAVA_REGEX_PATTERN, null)
-		}
+        log.debug("Executing spotbugs:check")
 
-		if ( !skip && sourceFiles ) {
+        if (this.classFilesDirectory.exists() && this.classFilesDirectory.isDirectory()) {
+            sourceFiles = FileUtils.getFiles(classFilesDirectory, SpotBugsInfo.JAVA_REGEX_PATTERN, null)
+        }
 
-			// this goes
+        if (!skip && sourceFiles) {
 
-			log.debug("Here goes...............Executing spotbugs:check")
+            // this goes
 
-			if (!spotbugsXmlOutputDirectory.exists()) {
-				if ( !spotbugsXmlOutputDirectory.mkdirs() ) {
+            log.debug("Here goes...............Executing spotbugs:check")
+
+            if (!spotbugsXmlOutputDirectory.exists()) {
+                if ( !spotbugsXmlOutputDirectory.mkdirs() ) {
                     throw new MojoExecutionException("Cannot create xml output directory")
-				}
-			}
+                }
+            }
 
-			File outputFile = new File("${spotbugsXmlOutputDirectory}/spotbugsXml.xml")
+            File outputFile = new File("${spotbugsXmlOutputDirectory}/spotbugsXml.xml")
 
-			if (outputFile.exists()) {
+            if (outputFile.exists()) {
 
-				def path = new XmlSlurper().parse(outputFile)
+                def path = new XmlSlurper().parse(outputFile)
 
-				def allNodes = path.depthFirst().collect { it }
+                def allNodes = path.depthFirst().collect { it }
 
-				bugCount = allNodes.findAll {it.name() == 'BugInstance'}.size()
-				log.info("BugInstance size is ${bugCount}")
+                bugCount = allNodes.findAll {it.name() == 'BugInstance'}.size()
+                log.info("BugInstance size is ${bugCount}")
 
-				errorCount = allNodes.findAll {it.name() == 'Error'}.size()
-				log.info("Error size is ${errorCount}")
+                errorCount = allNodes.findAll {it.name() == 'Error'}.size()
+                log.info("Error size is ${errorCount}")
 
                 def xml = new XmlParser().parse(outputFile)
                 def bugs = xml.BugInstance
@@ -497,6 +515,10 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
                 if (total <= 0) {
                     log.info('No errors/warnings found')
                     return
+                }else if( maxAllowedViolations > 0 && total <= maxAllowedViolations){
+                    log.info("total ${total} violations are found which is set to be acceptable using configured property maxAllowedViolations :"+maxAllowedViolations +".\nBelow are list of bugs ignored :\n")
+                    printBugs(total, bugs)
+                    return;
                 }
 
                 log.info('Total bugs: ' + total)
@@ -514,6 +536,14 @@ class SpotbugsViolationCheckMojo extends AbstractMojo {
         }
         else {
             log.debug("Nothing for SpotBugs to do here.")
+        }
+    }
+
+    private void printBugs(total, bugs) {
+        for (i in 0..total - 1) {
+            def bug = bugs[i]
+            log.error( bug.LongMessage.text() + SpotBugsInfo.BLANK + bug.SourceLine.'@classname' + SpotBugsInfo.BLANK + bug.SourceLine.Message.text() + SpotBugsInfo.BLANK + bug.'@type')
+
         }
     }
 
